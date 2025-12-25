@@ -1,0 +1,70 @@
+plugins {
+    id 'fabric-loom' version '1.4-SNAPSHOT'
+    id 'maven-publish'
+}
+
+version = '1.0.0'
+group = 'com.mervyn'
+
+base {
+    archivesName = 'simplyswords-haste-tweaks'
+}
+
+// Minecraft 1.20.1 compatible versions
+def minecraft_version = '1.20.1'
+def yarn_mappings = '1.20.1+build.10'
+def loader_version = '0.15.3'
+def fabric_version = '0.91.0+1.20.1'
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://maven.fabricmc.net/' }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings "net.fabricmc:yarn:${yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    
+    // SimplySwords - use modCompileOnly to let loom remap it
+    // The jar will be remapped from intermediary to yarn for compilation
+    modCompileOnly(files('libs/simplyswords-1.56.0-1.20.1.jar')) {
+        // Tell loom this is an intermediary mapped mod
+    }
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/simplyswords_haste_tweaks.accesswidener")
+    
+    // Configure remapping for the local mod jar
+    mods {
+        simplyswords {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+processResources {
+    inputs.property 'version', project.version
+
+    filesMatching('fabric.mod.json') {
+        expand 'version': project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 17
+}
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+jar {
+    from('LICENSE') {
+        rename { "${it}_${project.base.archivesName.get()}" }
+    }
+}

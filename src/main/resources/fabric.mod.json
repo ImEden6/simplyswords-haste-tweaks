@@ -1,0 +1,31 @@
+{
+    "schemaVersion": 1,
+    "id": "simplyswords_haste_tweaks",
+    "version": "${version}",
+    "name": "SimplySwords Haste Tweaks",
+    "description": "Customize Haste effect levels for Harbinger and Enigma swords in SimplySwords",
+    "authors": [
+        "Mervyn"
+    ],
+    "contact": {},
+    "license": "MIT",
+    "environment": "*",
+    "accessWidener": "simplyswords_haste_tweaks.accesswidener",
+    "entrypoints": {
+        "main": [
+            "com.mervyn.simplyswordstweaks.SimplySwordsHasteTweaks"
+        ]
+    },
+    "mixins": [
+        "simplyswords_haste_tweaks.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=0.15.0",
+        "minecraft": "~1.20.1",
+        "java": ">=17",
+        "simplyswords": "*"
+    },
+    "suggests": {
+        "fabric-api": "*"
+    }
+}

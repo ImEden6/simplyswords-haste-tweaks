@@ -1,0 +1,11 @@
+{
+    "required": true,
+    "package": "com.mervyn.simplyswordstweaks.mixin",
+    "compatibilityLevel": "JAVA_17",
+    "mixins": [
+        "BattleStandardDarkEntityMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

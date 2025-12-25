@@ -1,6 +1,6 @@
 # SimplySwords Haste Tweaks
 
-A Fabric mod that lets you customize the Haste effect levels for **Harbinger** and **Enigma** swords from the [SimplySwords](https://github.com/Sweenus/SimplySwords) mod.
+A Fabric mixin that lets you customize the Haste effect levels for **Harbinger** and **Enigma** swords from the [SimplySwords](https://github.com/Sweenus/SimplySwords) mod.
 
 ## Features
 

@@ -24,6 +24,7 @@ remappedSrc/
 
 # Libs folder (local dependency jars)
 libs/*.jar
+libs/*.txt
 
 # Extracted class files (from javap debugging)
 net/

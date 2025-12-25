@@ -1,13 +1,8 @@
 # SimplySwords Haste Tweaks
 
-A Fabric mod that lets you customize the Haste effect levels for **Harbinger** and **Enigma** swords from the [SimplySwords](https://github.com/Sweenus/SimplySwords) mod.
+A Fabric mod that lets you customize the Haste effect from the Battle Standard (banner entity) in [SimplySwords](https://github.com/Sweenus/SimplySwords).
 
-## Features
-
-- **Customize Owner Haste**: When you stand near your banner (both Harbinger and Enigma)
-- **Customize Ally Haste**: The AOE Haste pulse from Harbinger's banner
-- **Enable/Disable Effects**: Completely disable either Haste effect
-- **JSON Config**: Easy-to-edit config file
+By default, SimplySwords grants Haste up to level VIII. This mod lets you cap it or disable it entirely.
 
 ## Requirements
 
@@ -18,61 +13,53 @@ A Fabric mod that lets you customize the Haste effect levels for **Harbinger** a
 
 ## Configuration
 
-After first launch, a config file will be created at:
-```
-.minecraft/config/simplyswords-haste-tweaks.json
-```
-
-### Config Options
+Config file: `.minecraft/config/simplyswords-haste-tweaks.json`
 
 ```json
 {
-  "ownerHasteEnabled": true,
-  "ownerHasteMaxLevel": 4,
-  "ownerHasteDuration": 60,
-  "allyHasteEnabled": true,
-  "allyHasteLevel": 4,
-  "allyHasteDuration": 90
+  "hasteEnabled": true,
+  "hasteLevel": 3,
+  "hasteDuration": 60,
+  "loggingEnabled": false
 }
 ```
 
-| Option | Description | Default | Notes |
-|--------|-------------|---------|-------|
-| `ownerHasteEnabled` | Enable Haste for you when near your banner | `true` | Applies to both Harbinger & Enigma |
-| `ownerHasteMaxLevel` | Max Haste level (0=I, 1=II, 2=III, etc.) | `4` (Haste V) | Effect ramps up to this level |
-| `ownerHasteDuration` | Duration in ticks (20 = 1 second) | `60` (3 seconds) | How long the effect lasts |
-| `allyHasteEnabled` | Enable AOE Haste pulse for allies | `true` | **Harbinger only**, not Enigma |
-| `allyHasteLevel` | Haste level for allies | `4` (Haste V) | Applied every 80 ticks |
-| `allyHasteDuration` | Duration in ticks for allies | `90` (4.5 seconds) | - |
+| Option | Description | Default |
+|--------|-------------|---------|
+| `hasteEnabled` | Enable/disable Haste effect from banner | `true` |
+| `hasteLevel` | Max Haste level (0=I, 1=II, 2=III, 3=IV) | `3` (Haste IV) |
+| `hasteDuration` | Duration in ticks (20 = 1 second) | `60` (3 seconds) |
+| `loggingEnabled` | Enable debug logging | `false` |
 
-### Example: Disable all Haste effects
+## Examples
+
+**Disable Haste entirely:**
 ```json
-{
-  "ownerHasteEnabled": false,
-  "allyHasteEnabled": false
-}
+{ "hasteEnabled": false }
 ```
 
-### Example: Maximum Haste (Haste X for owner)
+**Cap at Haste II:**
 ```json
-{
-  "ownerHasteMaxLevel": 9,
-  "ownerHasteDuration": 100,
-  "allyHasteLevel": 5
-}
+{ "hasteLevel": 1 }
+```
+
+**Haste X with 5 second duration:**
+```json
+{ "hasteLevel": 9, "hasteDuration": 100 }
 ```
 
 ## How It Works
 
-This mod uses [Mixin](https://github.com/SpongePowered/Mixin) to intercept the Haste effect applications in SimplySwords' `BattleStandardDarkEntity` class (the banner entity spawned by both swords).
+This mod uses a Mixin to intercept `HelperMethods.incrementStatusEffect()` in SimplySwords. When Haste is being applied, the mod checks the configured max level and prevents it from exceeding that value.
 
-### Haste Effects in SimplySwords
+## Building
 
-| Effect | Swords | Original Behavior |
-|--------|--------|-------------------|
-| **Owner Haste** | Both | Haste I→VIII when within 3 blocks of banner |
-| **Ally Haste** | Harbinger only | Haste III to nearby allies every 4 seconds |
+```bash
+./gradlew build
+```
+
+Output: `build/libs/simplyswords-haste-tweaks-1.0.0.jar`
 
 ## License
 
-MIT License - see [LICENSE](LICENSE)
+MIT License

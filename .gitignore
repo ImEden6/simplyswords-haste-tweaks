@@ -22,8 +22,15 @@ run/
 *.log
 remappedSrc/
 
-# Libs folder (contains local dependency jars)
+# Libs folder (local dependency jars)
 libs/*.jar
+
+# Extracted class files (from javap debugging)
+net/
+
+# Temp files
+javap_helper.txt
+*.txt.bak
 
 # OS files
 .DS_Store

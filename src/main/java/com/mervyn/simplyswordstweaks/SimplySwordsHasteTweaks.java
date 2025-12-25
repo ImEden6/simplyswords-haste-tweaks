@@ -10,13 +10,13 @@ public class SimplySwordsHasteTweaks implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        // Load config
         HasteTweaksConfig.load();
         
-        LOGGER.info("SimplySwords Haste Tweaks loaded!");
-        LOGGER.info("Owner Haste Max Level: {}", HasteTweaksConfig.ownerHasteMaxLevel);
-        LOGGER.info("Ally Haste Level (Harbinger): {}", HasteTweaksConfig.allyHasteLevel);
-        LOGGER.info("Owner Haste Enabled: {}", HasteTweaksConfig.ownerHasteEnabled);
-        LOGGER.info("Ally Haste Enabled (Harbinger): {}", HasteTweaksConfig.allyHasteEnabled);
+        if (HasteTweaksConfig.loggingEnabled) {
+            LOGGER.info("SimplySwords Haste Tweaks loaded!");
+            LOGGER.info("Haste Enabled: {}", HasteTweaksConfig.hasteEnabled);
+            LOGGER.info("Haste Level: {}", HasteTweaksConfig.hasteLevel);
+            LOGGER.info("Haste Duration: {} ticks", HasteTweaksConfig.hasteDuration);
+        }
     }
 }

@@ -23,7 +23,7 @@ run/
 remappedSrc/
 
 # Libs folder (local dependency jars)
-libs/*.jar
+libs/
 
 # Extracted class files (from javap debugging)
 net/

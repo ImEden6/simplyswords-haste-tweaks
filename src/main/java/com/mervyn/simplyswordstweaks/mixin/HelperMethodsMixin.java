@@ -15,26 +15,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = HelperMethods.class, remap = false)
 public class HelperMethodsMixin {
 
-    // Guard against recursion
-    private static final ThreadLocal<Boolean> isApplyingHaste = ThreadLocal.withInitial(() -> false);
-
-    // Using intermediary class names for the method descriptor since SimplySwords is compiled against intermediary
+    // Using intermediary class names for the method descriptor since SimplySwords
+    // is compiled against intermediary
     // class_1309 = LivingEntity, class_1291 = StatusEffect
-    @Inject(
-        method = "incrementStatusEffect(Lnet/minecraft/class_1309;Lnet/minecraft/class_1291;III)V",
-        at = @At("HEAD"),
-        cancellable = true,
-        remap = false
-    )
-    private static void onIncrementStatusEffect(LivingEntity entity, StatusEffect effect, int duration, int amplifier, int maxAmplifier, CallbackInfo ci) {
-        // Recursion guard
-        if (isApplyingHaste.get()) {
-            return;
-        }
-
+    @SuppressWarnings("target") // suppressed cus i cba
+    @Inject(method = "incrementStatusEffect(Lnet/minecraft/class_1309;Lnet/minecraft/class_1291;III)V", at = @At("HEAD"), cancellable = true, remap = false)
+    private static void onIncrementStatusEffect(LivingEntity entity, StatusEffect effect, int duration, int amplifier,
+            int maxAmplifier, CallbackInfo ci) {
         // Only target Haste effect
         if (effect == StatusEffects.HASTE) {
-            
+
             // Check if mod is disabled in config
             if (!HasteTweaksConfig.hasteEnabled) {
                 if (entity.hasStatusEffect(StatusEffects.HASTE)) {
@@ -45,42 +35,18 @@ public class HelperMethodsMixin {
             }
 
             int targetLevel = HasteTweaksConfig.hasteLevel;
-            StatusEffectInstance currentEffect = entity.getStatusEffect(StatusEffects.HASTE);
-            int currentAmplifier = (currentEffect != null) ? currentEffect.getAmplifier() : -1;
-            
-            try {
-                isApplyingHaste.set(true);
-                
-                if (currentAmplifier < targetLevel) {
-                     int nextAmplifier = currentAmplifier + 1;
-                     int newAmplifier = Math.min(nextAmplifier, targetLevel);
-                     
-                     entity.addStatusEffect(new StatusEffectInstance(
-                         StatusEffects.HASTE,
-                         HasteTweaksConfig.hasteDuration,
-                         newAmplifier,
-                         false, false, true
-                     ));
-                } else {
-                    // Refresh duration if at target level
-                    if (currentAmplifier == targetLevel) {
-                         entity.addStatusEffect(new StatusEffectInstance(
-                             StatusEffects.HASTE,
-                             HasteTweaksConfig.hasteDuration,
-                             targetLevel,
-                             false, false, true
-                         ));
-                    }
-                    // If > targetLevel, ignore and cancel to prevent incrementing further
-                }
-                
-                ci.cancel();
-                if (HasteTweaksConfig.loggingEnabled) {
-                    SimplySwordsHasteTweaks.LOGGER.info("Intercepted Haste application. Current: {}, Target: {}", currentAmplifier, targetLevel);
-                }
 
-            } finally {
-                isApplyingHaste.set(false);
+            // Just apply/refresh Haste at configured max level directly
+            entity.addStatusEffect(new StatusEffectInstance(
+                    StatusEffects.HASTE,
+                    HasteTweaksConfig.hasteDuration,
+                    targetLevel,
+                    false, false, true));
+
+            ci.cancel();
+
+            if (HasteTweaksConfig.loggingEnabled) {
+                SimplySwordsHasteTweaks.LOGGER.info("Applied Haste at level {}", targetLevel);
             }
         }
     }
